@@ -1,18 +1,18 @@
 "use strict";
 
-let cardWrapper = document.querySelector(".wrapper");
+let cardWrapper = $(".wrapper");
+let brandOption = $(".brandName");
+let brand = [];
 
 // ------------ RENDER FUNCTION --------------------
 
 function renderProducts(data) {
-  if (data.products.length > 0) {
-    data.products.forEach((el) => {
+  if (data.length > 0) {
+    data.forEach((el) => {
       const { title, brand, thumbnail, price, discountPercentage } = el;
 
-      const card = document.createElement("div");
-      card.classList.add("card");
-      card.innerHTML = `
-        <img src="${thumbnail}" alt="">
+      const card = render("div","card",`
+      <img src="${thumbnail}" alt="">
            <p>${title}</p>
            <p><span>${price}</span> <span>${Math.round(price * 1.44)}</span></p>
            <p>Save - ₹32999</p>
@@ -20,8 +20,7 @@ function renderProducts(data) {
                ${Math.round(discountPercentage)}%
                OFF
            </div>
-         `;
-
+      `);
       cardWrapper.appendChild(card);
     });
   } else {
@@ -29,4 +28,44 @@ function renderProducts(data) {
   }
 }
 
-renderProducts(product);
+renderProducts(product.products);
+
+
+
+function findBrand(data) {
+  if (data.length > 0) {
+    data.forEach((el) => {
+      if (!brand.includes(el.brand)) {
+        brand.push(el.brand);
+      }
+    });
+  }
+  
+}
+findBrand(product.products)
+
+
+
+
+function renderBrand(data) {
+  if (data.length > 0) {
+    data.forEach((el) => {
+      const option = render(`option`, `classby`, el);
+      brandOption.appendChild(option)
+    });
+  }
+}
+renderBrand(brand)
+
+brandOption.addEventListener("change", (e) => {
+  sortBrands(e.target.value);
+});
+
+function sortBrands(brandName) {
+  cardWrapper.innerHTML = "";
+  const filterBrand = product.products.filter((el) => {
+    return el.brand.toLowerCase() == brandName.toLowerCase();
+  });
+
+  renderProducts(filterBrand);
+}
