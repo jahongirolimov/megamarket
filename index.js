@@ -69,3 +69,5 @@ function sortBrands(brandName) {
 
   renderProducts(filterBrand);
 }
+
+
